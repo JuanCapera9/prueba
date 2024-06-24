@@ -1,0 +1,422 @@
+body {
+    font-family: 'Roboto', sans-serif;
+}
+.page-header {
+    height: 100vh;
+    max-height: 1000px;
+}
+.card-profile .card-avatar img {
+    width: 100%;
+    height: auto;
+}
+body {
+    font-family: 'Roboto', sans-serif;
+}
+
+.page-header {
+    height: 100vh;
+    max-height: 1000px;
+    background-size: cover;
+    background-position: center;
+}
+
+.card-profile .card-avatar img {
+    width: 100%;
+    height: auto;
+}
+
+h1#productos {
+    text-align: center;
+    font-size: 3em;
+    max-width: 80%;
+    margin: -1px auto 29px auto;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+
+/*Inicio de footer*/
+.social-media-icons a {
+    margin: 0 10px;
+    font-size: 24px;
+    color: #fff; /* Cambia el color de los íconos a blanco */
+}
+
+.social-media-icons a:hover {
+    color: #ffffff; /* Cambia el color de los íconos a blanco al pasar el cursor */
+}
+.social-media-icons a {
+    margin: 0 10px;
+    font-size: 24px;
+    color: #fff; /* Cambia el color de los íconos a blanco */
+}
+
+.social-media-icons a:hover {
+    color: #ffffff; /* Cambia el color de los íconos a blanco al pasar el cursor */
+}
+.footer {
+    background-color: rgb(41, 39, 39);
+    color: #fff;
+    padding: 40px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: flex-start;
+  }
+  
+  .footer-section {
+    width: calc(100% - 20px); /* Ancho completo en dispositivos pequeños */
+  }
+  
+  .footer-section h3 {
+    font-size: 1.5rem;
+    margin-bottom: 40px;
+    color: rgb(10, 107, 47);
+    position: relative;
+  }
+  
+  .footer-section h3::after {
+    content: '';
+    position: absolute;
+    bottom: -15px;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background-color: white;
+  }
+  
+  .footer-section p {
+    margin: 0;
+    line-height: 1.5;
+  }
+  
+  .footer-section a {
+    color: #fff;
+    text-decoration: none;
+    margin-right: 10px;
+    transition: color 0.3s ease; /* Transición suave de color durante 0.3 segundos */
+}
+  
+  .footer-section a:hover {
+    color: rgb(30, 177, 103);
+  }
+  
+  .footer-section i {
+    font-size: 1.5rem;
+    margin-right: 10px;
+    margin: 0 10px;
+    font-size: 24px;
+    color: #fff; /* Cambia el color de los íconos a blanco */
+  }
+  
+  .footer-section .social-link {
+    margin-top: 20px;
+  }
+  
+  .footer-section .social-link a {
+    color: #fff; /* Cambia el color de los iconos a blanco */
+    text-decoration: none;
+    margin-right: 10px;
+    transition: color 0.3s ease;
+    display: inline-block;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.2);
+    text-align: center;
+    line-height: 40px;
+}
+
+  
+  .footer-section .social-link a:hover {
+    background-color: rgba(255, 255, 255, 0.5);
+  }
+  
+  .footer .copyright {
+    width: 100%;
+    text-align: center;
+    margin-top: 40px; /* Ajusta el espacio entre el contenido y el copyright */
+    font-size: 0.8rem; /* Tamaño de fuente más pequeño */
+    color: rgb(10, 107, 47);
+  }
+  
+  @media (min-width: 720px) {
+    .footer-section {
+      width: calc(33.33% - 20px); /* Ancho del 33.33% en dispositivos medianos y grandes */
+    }
+  }
+/*Fin de footer*/
+
+
+/*Botones del landing pages*/
+.btn-custom {
+    background-color: #1ed133; /* Cambia este color por el que desees */
+    color: white;
+    border: none;
+}
+.btn-custom:hover {
+    background-color: #163b0e; /* Cambia este color para el efecto hover */
+    color: white;
+}
+.custom-navbar {
+    border-radius: 15px 15px 0 0; /* Ajusta las esquinas de abajo */
+}
+
+.card-avatar .img {
+    width: 100%;
+    height: auto;
+    max-width: 350px;
+    max-height: 200px;
+    object-fit: cover; /* Mantiene la relación de aspecto y rellena el contenedor */
+}
+.card-avatar .img {
+    width: 100%;
+    height: auto;
+    max-width: 350px;
+    max-height: 200px;
+    object-fit: cover; /* Mantiene la relación de aspecto y rellena el contenedor */
+}
+
+.carta-accesorios {
+    background-image: linear-gradient(
+        0deg,
+        rgba(0, 0, 0, 0.5),
+        rgba(0, 0, 0, 0.5)
+    ),
+    url('../img/accesorios-scaled.jpeg');
+    background-size: cover;
+    background-position: center;
+    color: white; /* Asegura que el texto sea legible sobre el fondo */
+}
+
+.carta-herramientas {
+    background-image: linear-gradient(
+        0deg,
+        rgba(0, 0, 0, 0.5),
+        rgba(0, 0, 0, 0.5)
+    ),
+    url('../img/herramientas.jpg');
+    background-size: cover;
+    background-position: center;
+    color: white; /* Asegura que el texto sea legible sobre el fondo */
+}
+
+.carta-parches {
+    background-image: linear-gradient(
+        0deg,
+        rgba(0, 0, 0, 0.5),
+        rgba(0, 0, 0, 0.5)
+    ),
+    url('../img/parches.jpg');
+    background-size: cover;
+    background-position: center;
+    color: rgb(255, 255, 255); /* Asegura que el texto sea legible sobre el fondo */
+}
+.card-title,
+.card-description {
+    color: white; /* Cambia el color del texto a blanco */
+}
+
+#Nosotros {
+    background-color: #f2f2f2;
+    padding: 50px 0;
+}
+
+.contenedor {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+.img-contenedor {
+    flex: 0 0 50%;
+    height: 465px;
+    background-image: url('../img/Icono.jpg');
+    background-size: cover;
+    background-position: center;
+    border-radius: 10px;
+}
+
+.texto {
+    flex: 0 0 45%;
+    text-align: left;
+}
+
+.texto h2 {
+    color: #333;
+    font-size: 36px;
+    margin-bottom: 20px;
+}
+
+.texto .color-acento {
+    color: #12e446;
+}
+
+.texto p {
+    color: #666;
+    font-size: 18px;
+    line-height: 1.6;
+}
+
+#caracteristicas {
+    padding: 50px 0;
+    background-color: #f8f9fa; /* Color de fondo suave */
+    background-image: url('../img/bmw-g36cdc17b4_1280.jpg'); /* Imagen de fondo */
+    background-repeat: no-repeat;
+    background-size: 600px 400px;
+    background-position: calc(100vw - 500px) 120px;
+}
+
+#caracteristicas .contenedor {
+    text-align: left; /* Alineación del texto a la izquierda */
+    max-width: 1200px;
+    margin: 192px auto;
+    padding: 0 20px;
+}
+
+#caracteristicas ol {
+    margin-left: 0; /* Elimina el margen izquierdo */
+    padding-left: 0; /* Elimina el relleno izquierdo */
+    list-style: none; /* Elimina el estilo de lista */
+}
+
+#caracteristicas ol li {
+    font-size: 18px; /* Tamaño de la fuente */
+    color: #333; /* Color del texto */
+    margin-bottom: 10px; /* Espacio inferior entre elementos de la lista */
+    font-weight: bold; /* Negrita para los elementos de la lista */
+}
+
+@media (min-width: 700px) {
+    #caracteristicas {
+        background-position-x: calc(100vw - 800px); /* Ajuste de la posición de la imagen en pantallas más grandes */
+    }
+}
+#tienda{
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+    color: rgb(14, 14, 14);
+    height: 80vh;
+}
+
+#tienda {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+    color: rgb(14, 14, 14);
+    height: 80vh;
+}
+
+#tienda h2 {
+    font-size: 5em; /* Ajusta el tamaño del título */
+}
+
+#tienda button {
+    font-size: 1.5em; /* Ajusta el tamaño del texto del botón */
+    padding: 10px 20px; /* Ajusta el relleno del botón */
+    background-color: #1ed133; /* Color de fondo del botón */
+    color: white; /* Color del texto del botón */
+    border: none; /* Elimina el borde del botón */
+    border-radius: 5px; /* Agrega bordes redondeados al botón */
+    cursor: pointer; /* Cambia el cursor al pasar sobre el botón */
+    transition: background-color 0.3s ease; /* Agrega una transición suave al color de fondo */
+    margin-top: 20px; /* Ajusta el margen superior del botón */
+}
+
+#tienda button:hover {
+    background-color: #163b0e; /* Cambia el color de fondo del botón al pasar el cursor */
+}
+
+/*Estilos para las redes sociales*/
+.social-media-icons {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .social-media-icons a {
+    margin: 0 10px;
+    font-size: 24px;
+    color: #333;
+  }
+  
+  .social-media-icons a:hover {
+    color: #ffffff;
+  }
+  /* Estilos para cambiar el color de fondo cuando se selecciona un elemento del menú */
+.navbar-nav .nav-link.active,
+.navbar-nav .nav-link:hover,
+.navbar-nav .nav-link:focus {
+    background-color: #343a40; /* Color de fondo cuando se selecciona o se pasa el cursor */
+}
+/* Estilos para el botón de tienda */
+.btn-tienda {
+    display: inline-block;
+    padding: 15px 30px;
+    font-size: 18px;
+    font-weight: bold;
+    text-transform: uppercase;
+    text-align: center;
+    color: #ffffff;
+    background-color: #2de33f;
+    border: 2px solid #22aea0;
+    border-radius: 50px;
+    transition: all 0.3s ease;
+}
+
+.btn-tienda:hover {
+    background-color: #086a0f;
+    border-color: #15be5e;
+    color: #ffffff;
+    text-decoration: none;
+}
+
+.btn-tienda:active {
+    background-color: #2da942;
+    border-color: #20c24b;
+}
+
+/*Barra de navegacion inicio*/
+.custom-navbar {
+    border-radius: 0 0 15px 15px; /* Ajusta las esquinas de abajo */
+}
+.custom-navbar .navbar-brand {
+    display: flex;
+    align-items: center;
+}
+
+.custom-navbar .navbar-brand .logo {
+    height: 40px; /* Ajusta el tamaño del logo según sea necesario */
+    margin-right: 10px;
+}
+
+.custom-navbar .nav-link {
+    transition: color 0.3s ease-in-out, background-color 0.3s ease-in-out;
+}
+
+.custom-navbar .nav-link:hover {
+    color: #ffffff; /* Color del texto al pasar el cursor */
+    background-color: #555555; /* Color de fondo al pasar el cursor */
+    border-radius: 5px;
+}
+
+.custom-navbar .nav-link:active {
+    color: #adb5bd; /* Color del texto al hacer clic */
+    background-color: transparent; /* Fondo transparente al hacer clic */
+}
+/*Fin de barra de navegacion*/
+
+.logo {
+    width: 56px; /* Ancho deseado */
+    height: auto; /* Altura automática para mantener la proporción */
+}
+.form-control, .is-focused .form-control {
+    background-image: linear-gradient(0deg, #12c430 2px, rgba(156, 39, 176, 0) 0), linear-gradient(0deg, #d2d2d2 1px, hsla(0, 0%, 82%, 0) 0);
+}

@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nowtify logist</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link rel="icon" type="image/png" href="../static/img/logo.png">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/Style.css') }}">
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.datatables.net/1.10.21/css/jquery.dataTables.min.css" rel="stylesheet">
+    <link href="https://cdn.datatables.net/1.10.21/css/dataTables.bootstrap4.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+
+    <style>
+        body {
+            padding-top: 56px;
+            background-color: #ffffff;
+            background-image: url('../static/img/fondo.jfif');
+            background-size: cover;
+            background-repeat: no-repeat;
+            font-family: "Roboto", sans-serif;
+            margin: 0;
+            text-transform: capitalize;
+        }
+
+        .custom-navbar {
+            backdrop-filter: blur(2px);
+        }
+
+        .custom-navbar .navbar-toggler-icon {
+            background-image: url("data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 30 30' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='rgba(255, 255, 255, 0.5)' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E");
+        }
+
+        .custom-navbar .navbar-brand,
+        .custom-navbar .navbar-nav .nav-link {
+            color: #000000 !important;
+        }
+
+        .custom-navbar .nav-link {
+            color: #fff !important;
+            transition: color 0.3s ease;
+        }
+
+        .custom-navbar .nav-link:hover {
+            background-color: #3AB397;
+            color: #ff0000;
+        }
+
+        .custom-navbar .navbar-brand:hover {
+            color: #fff;
+        }
+
+        .sidebar {
+            background-color: #f5f5f5;
+            position: fixed;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            z-index: 100;
+            padding: 48px 0 0;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .sidebar-sticky {
+            overflow-y: auto;
+            height: calc(100vh - 48px);
+            padding-top: 20px;
+        }
+
+        .sidebar .nav-link {
+            font-weight: 500;
+            color: #333;
+            transition: color 0.15s ease-in-out;
+        }
+
+        .sidebar .nav-link:hover {
+            color: #1eb167;
+        }
+
+        .sidebar .nav-link.active {
+            font-weight: 700;
+            color: #1eb167;
+        }
+
+        .sidebar .nav-item {
+            margin-bottom: 10px;
+        }
+
+        .sidebar .section-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #adb5bd;
+            margin-top: 20px;
+            margin-bottom: 10px;
+            padding: 10px 15px;
+            background-color: #343a40;
+            border-radius: 5px;
+        }
+
+        .sidebar .icon {
+            margin-right: 10px;
+        }
+
+        .navbar-brand img {
+            max-height: 30px;
+        }
+
+        .navbar-nav .nav-link {
+            color: #fff;
+        }
+
+        .error-message {
+            color: red;
+            font-size: 12px;
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark custom-navbar fixed-top">
+        <a class="navbar-brand" href="/landing" target="_blank">
+            <span class="fa fa-user-circle-o fa-lg"></span>
+            Nowtify <span style="color: #1eb167;">Logist</span>
+        </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="#">
+                        <i class="fas fa-user-circle"></i> Usuario {{ session['nombre_usuario'] }}
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('logout') }}">
+                        <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="sidebar">
+        <div class="sidebar-sticky">
+            <ul class="nav flex-column">
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('index') }}">
+                        <i class="fas fa-home"></i> Inicio
+                    </a>
+                </li>
+                {% set role_sections = {
+                1: [
+                ('/productos', 'fas fa-box', 'Productos'),
+                ('/categorias', 'fas fa-tags', 'Categorías'),
+                ('/proveedores', 'fas fa-truck', 'Proveedores'),
+                ('/compras', 'fas fa-shopping-cart', 'Compras'),
+                ('/clientes', 'fas fa-users', 'Clientes'),
+                ('/ventas', 'fas fa-cash-register', 'Ventas'),
+                ('/empleados', 'fas fa-user-tie', 'Empleados'),
+                ('/usuarios', 'fas fa-user', 'Usuarios'),
+                ('/inventario', 'fas fa-warehouse', 'Inventario'),
+                (url_for('movimientos'), 'fas fa-exchange-alt', 'Movimientos inventario')
+                ],
+                2: [
+                ('/productos', 'fas fa-box', 'Productos'),
+                ('/categorias', 'fas fa-tags', 'Categorías'),
+                ('/proveedores', 'fas fa-truck', 'Proveedores'),
+                ('/compras', 'fas fa-shopping-cart', 'Compras')
+                ],
+                3: [
+                ('/clientes', 'fas fa-users', 'Clientes'),
+                ('/ventas', 'fas fa-cash-register', 'Ventas')
+                ],
+                4: [
+                ('/productos', 'fas fa-box', 'Productos'),
+                ('/categorias', 'fas fa-tags', 'Categorías'),
+                ('/inventario', 'fas fa-warehouse', 'Inventario'),
+                (url_for('movimientos'), 'fas fa-exchange-alt', 'Movimientos inventario')
+                ]
+                } %}
+                {% if session.role in role_sections %}
+                {% for link, icon, text in role_sections[session.role] %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ link }}">
+                        <i class="{{ icon }}"></i> {{ text }}
+                    </a>
+                </li>
+                {% endfor %}
+                {% else %}
+                <li class="nav-item">
+                    <p class="nav-link">No tienes permisos para ver ningún enlace.</p>
+                </li>
+                {% endif %}
+            </ul>
+        </div>
+    </div>
+    <!-- Contenido principal -->
+    <main role="main" class="col-md-10 ml-sm-auto col-lg-10 px-4">
+        {% block body %}{% endblock %}
+    </main>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.21/js/dataTables.bootstrap4.min.js"></script>
+
+    <script>
+
+        $(document).ready(function () {
+            $('#agregarProveedorForm').submit(function (event) {
+                // Validación de Nombre y Apellido (solo letras y espacios)
+                var nombre = $('#nombre').val();
+                var apellido = $('#apellido').val();
+                var regexNombreApellido = /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/;
+                if (!regexNombreApellido.test(nombre)) {
+                    alert('Ingrese un nombre válido (solo letras y espacios).');
+                    event.preventDefault();
+                    return;
+                }
+                if (!regexNombreApellido.test(apellido)) {
+                    alert('Ingrese un apellido válido (solo letras y espacios).');
+                    event.preventDefault();
+                    return;
+                }
+
+                // Validación de Email
+                var email = $('#email').val();
+                var regexEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                if (!regexEmail.test(email)) {
+                    alert('Ingrese un email válido.');
+                    event.preventDefault();
+                    return;
+                }
+
+                // Validación de Dirección (opcional, según tus requisitos)
+                var direccion = $('#direccion').val();
+                if (direccion.trim() === '') {
+                    alert('Ingrese una dirección.');
+                    event.preventDefault();
+                    return;
+                }
+
+                // Validación de Ciudad (asegurar que se seleccione una opción válida)
+                var ciudad = $('#ciudad').val();
+                if (ciudad === null || ciudad === '') {
+                    alert('Seleccione una ciudad.');
+                    event.preventDefault();
+                }
+            });
+        });
+
+        // Editar categoría (usando delegación de eventos para elementos creados dinámicamente)
+        $(document).on('click', '.editar-categoria', function () {
+            var id = $(this).data('id');
+            var nombre = $(this).data('nombre');
+            var descripcion = $(this).data('descripcion');
+
+            // Prellenar el formulario de edición con los datos de la categoría seleccionada
+            $('#editarCategoriaModal #id_categoria').val(id);
+            $('#editarCategoriaModal #nombre').val(nombre);
+            $('#editarCategoriaModal #descripcion').val(descripcion);
+
+            // Mostrar el modal de edición
+            $('#editarCategoriaModal').modal('show');
+        });
+
+        // ---------------------------TABLAS-----------------------------------------
+        $(document).ready(function () {
+            $('#tablasJs').DataTable({
+                "paging": true,
+                "lengthChange": false,
+                "searching": true,
+                "ordering": true,
+                "info": true,
+                "autoWidth": false,
+                "language": {
+                    "search": "Buscar:",
+                    "zeroRecords": "No se encontraron registros coincidentes",
+                    "paginate": {
+                        "first": "Primero",
+                        "last": "Último",
+                        "next": "Siguiente",
+                        "previous": "Anterior"
+                    },
+                    "info": "Mostrando _START_ a _END_ de _TOTAL_ entradas",
+                    "infoEmpty": "Mostrando 0 a 0 de 0 entradas",
+                    "infoFiltered": "(filtrado de _MAX_ entradas totales)"
+                }
+            });
+        });
+
+
+    </script>
+    <script>
+        $(document).ready(function () {
+            // -----------------------------------Cliente---------------------------------------------------
+            // Mostrar formulario al hacer clic en el botón
+            $('#mostrarFormularioBtn').click(function () {
+                $('#agregarClienteForm').slideDown();
+            });
+
+            // Cerrar formulario al hacer clic en la "x"
+            $('#cerrarFormularioBtn').click(function () {
+                $('#agregarClienteForm').slideUp();
+            });
+            // -----------------------------------Categoria---------------------------------------------------
+            // Mostrar u ocultar el formulario de agregar categoría
+            $('#mostrarFormularioBtn').click(function () {
+                $('#agregarCategoriaForm').slideDown();
+                $('#mostrarFormularioBtn').hide(); // Ocultar el botón "Agregar Categoría"
+            });
+
+            // Cerrar el formulario de agregar categoría
+            $('#cerrarFormularioBtn').click(function () {
+                $('#agregarCategoriaForm').slideUp();
+                $('#mostrarFormularioBtn').show(); // Mostrar nuevamente el botón "Agregar Categoría"
+            });
+            // -----------------------------------Productos---------------------------------------------------
+            $('#mostrarFormularioBtn').click(function () {
+                $('#agregarProductoForm').slideDown();
+                $('#mostrarFormularioBtn').hide(); // Ocultar el botón "Agregar Producto"
+            });
+
+            // Cerrar formulario al hacer clic en la "x"
+            $('#cerrarFormularioBtn').click(function () {
+                $('#agregarProductoForm').slideUp();
+                $('#mostrarFormularioBtn').show(); // Mostrar nuevamente el botón "Agregar Producto"
+            });
+            // -----------------------------------Proveedor---------------------------------------------------
+            // Mostrar formulario al hacer clic en el botón "Agregar Proveedor"
+            $('#mostrarFormularioBtn').click(function () {
+                $('#agregarProveedorForm').slideDown();
+                $('#mostrarFormularioBtn').hide(); // Ocultar el botón "Agregar Proveedor"
+            });
+
+            // Cerrar formulario al hacer clic en la "x"
+            $('#cerrarFormularioBtn').click(function () {
+                $('#agregarProveedorForm').slideUp();
+                $('#mostrarFormularioBtn').show(); // Mostrar nuevamente el botón "Agregar Proveedor"
+            });
+            // -----------------------------------Venta---------------------------------------------------
+            // Mostrar formulario al hacer clic en el botón "Agregar Proveedor"
+            $('#mostrarVentaFormBtn').click(function () {
+                $('#agregarVentaForm').slideDown();
+                $('#mostrarVentaFormBtn').hide(); // Ocultar el botón "Agregar Venta"
+            });
+
+            // Cerrar formulario al hacer clic en la "x"
+            $('#cerrarVentaFormBtn').click(function () {
+                $('#agregarVentaForm').slideUp();
+                $('#mostrarVentaFormBtn').show(); // Mostrar nuevamente el botón "Agregar Venta"
+            });
+            // -----------------------------------Compra---------------------------------------------------
+            // Mostrar formulario al hacer clic en el botón "Agregar Proveedor"
+            $('#mostrarCompraFormBtn').click(function () {
+                $('#agregarCompraForm').slideDown();
+                $('#mostrarCompraFormBtn').hide(); // Ocultar el botón "Agregar Compra"
+            });
+
+            // Cerrar formulario al hacer clic en la "x"
+            $('#cerrarCompraFormBtn').click(function () {
+                $('#agregarCompraForm').slideUp();
+                $('#mostrarCompraFormBtn').show(); // Mostrar nuevamente el botón "Agregar Compra"
+            });
+            // -----------------------------------Empleado---------------------------------------------------
+            $('#mostrarEmpleadoFormBtn').click(function () {
+                $('#agregarEmpleadoForm').slideDown();
+                $('#mostrarEmpleadoFormBtn').hide(); // Ocultar el botón "Agregar Empleado"
+            });
+
+            // Cerrar formulario al hacer clic en la "x"
+            $('#cerrarEmpleadoFormBtn').click(function () {
+                $('#agregarEmpleadoForm').slideUp();
+                $('#mostrarEmpleadoFormBtn').show(); // Mostrar nuevamente el botón "Agregar Empleado"
+            });
+            // -----------------------------------Usuario---------------------------------------------------
+            $(document).ready(function () {
+                $('#mostrarUsuarioFormBtn').click(function () {
+                    $('#agregarUsuarioForm').slideDown();
+                    $('#mostrarUsuarioFormBtn').hide(); // Ocultar el botón "Agregar Usuario"
+                });
+
+                // Cerrar formulario al hacer clic en la "x"
+                $('#cerrarUsuarioFormBtn').click(function () {
+                    $('#agregarUsuarioForm').slideUp();
+                    $('#mostrarUsuarioFormBtn').show(); // Mostrar nuevamente el botón "Agregar Usuario"
+                });
+            });
+            // -----------------------------------Inventario---------------------------------------------------
+            $(document).ready(function () {
+                $('#mostrarInventarioFormBtn').click(function () {
+                    $('#agregarInventarioForm').slideDown();
+                    $('#mostrarInventarioFormBtn').hide(); // Ocultar el botón "Agregar Usuario"
+                });
+
+                // Cerrar formulario al hacer clic en la "x"
+                $('#cerrarInventarioFormBtn').click(function () {
+                    $('#agregarInventarioForm').slideUp();
+                    $('#mostrarInventarioFormBtn').show(); // Mostrar nuevamente el botón "Agregar Usuario"
+                });
+            });
+            $(document).ready(function () {
+                $('#mostrarInventarioFormBtn').click(function () {
+                    $('#agregarInventarioForm').slideDown();
+                    $('#mostrarInventarioFormBtn').hide(); // Ocultar el botón "Agregar Inventario"
+                });
+
+                // Cerrar formulario al hacer clic en la "x"
+                $('#cerrarInventarioFormBtn').click(function () {
+                    $('#agregarInventarioForm').slideUp();
+                    $('#mostrarInventarioFormBtn').show(); // Mostrar nuevamente el botón "Agregar Inventario"
+                });
+            });
+        });
+    </script>
+</body>
+
+<footer class="footer">
+    <div class="copy">
+        <small>&copy; 2023 <b>Nowtify Logist</b> - Todos los Derechos reservados.</small>
+    </div>
+</footer>
+
+</html>

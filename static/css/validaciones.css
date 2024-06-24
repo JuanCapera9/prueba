@@ -1,0 +1,28 @@
+input {
+    border: 2px solid #ccc; /* Color por defecto */
+    outline: none;
+}
+
+input.invalid {
+    border-color: red;
+    background: url('cross.png') no-repeat right;
+    background-size: 20px;
+}
+
+input.valid {
+    border-color: green;
+    background: url('check.png') no-repeat right;
+    background-size: 20px;
+}
+.invalid {
+    border-color: red;
+}
+
+.valid {
+    border-color: green;
+}
+
+.error-message {
+    color: red;
+    font-size: 10px;
+}

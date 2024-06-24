@@ -1,0 +1,256 @@
+{% extends './layout.html' %}
+
+{% block body %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card-holder">
+                <div class="card-box bg-news">
+                    <h3 class="title">Ingreso de nuevas ventas</h3>
+                    {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% if messages %}
+                    {% for category, message in messages %}
+                    <div class="alert alert-{{ category }}" role="alert">
+                        {{ message }}
+                    </div>
+                    {% endfor %}
+                    {% endif %}
+                    {% endwith %}
+                    <div class="container mt-3">
+                        <!-- Botón para mostrar el formulario -->
+                        <button id="mostrarVentaFormBtn" class="btn btn-primary">Agregar Venta</button>
+                    </div>
+                    <!-- Contenedor del formulario -->
+                    <div id="agregarVentaForm" style="display: none;">
+
+                        <div class="cerrar-formulario" style="text-align: right;">
+                            <button type="button" class="close" id="cerrarVentaFormBtn" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <form action="{{ url_for('add_venta') }}" method="post">
+                            
+                                <div class="form-group">
+                                    <label for="id_cliente">Nombre Cliente</label>
+                                    <div class="input-group">
+                                        <select id="id_cliente" name="id_cliente" class="form-control" required>
+                                            <option value="" selected disabled>Seleccionar cliente</option>
+                                            {% for cliente_item in cliente %}
+                                            <option value="{{ cliente_item[0] }}">{{ cliente_item[1] }}</option>
+                                            {% endfor %}
+                                        </select>
+                                        <div class="input-group-append">
+                                            <span class="input-group-text"><i class="far fa-user"></i></span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <button type="submit" class="btn btn-primary btn-block">Agregar venta</button>
+                            
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container mt-5">
+    <h2>Tabla de Ventas</h2>
+    <div class="table-responsive">
+        <table id="tablasJs" class="table table-striped table-bordered table-hover">
+            <thead class="bg-green">
+                <tr>
+                    <th scope="col">ID</th>
+                    <th scope="col">Fecha de Venta</th>
+                    <th scope="col">Total</th>
+                    <th scope="col">Nombre Cliente</th>
+                    <th scope="col">Acciones</th>
+                    <th scope="col">Detalle Venta</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for venta in ventas %}
+                <tr>
+                    <th scope="row">{{ venta[0] }}</th>
+                    <td>{{ venta[1].strftime('%Y-%m-%dT%H:%M') }}</td>
+                    <td>{{ venta[2] }}</td>
+                    <td>{{ venta[3] }}</td>
+                    <td>
+                        <div class="btn-group" role="group" aria-label="Venta actions">
+                            <button type="button" class="btn btn-sm btn-warning" data-toggle="modal"
+                                data-target="#editarVentaModal{{ venta[0] }}">
+                                <i class="fas fa-pencil-alt"></i> Editar
+                            </button>
+                            <button type="button" class="btn btn-sm btn-success" data-toggle="modal"
+                                data-target="#agregarproducto{{ venta[0] }}">
+                                <i class="fas fa-plus"></i> Agregar Producto
+                            </button>
+                        </div>
+                    </td>
+                    <td>
+                        <button type="button" class="btn btn-sm btn-info" data-toggle="modal"
+                            data-target="#detalleVentaModal{{ venta[0] }}">
+                            <i class="fas fa-info-circle"></i> Detalle Venta
+                        </button>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+{% for venta in ventas %}
+<!-- Ventana Modal para editar venta -->
+<div class="modal fade" id="editarVentaModal{{ venta[0] }}" tabindex="-1" role="dialog"
+    aria-labelledby="editarVentaModal{{ venta[0] }}Label" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editarVentaModal{{ venta[0] }}Label">Editar Venta</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form action="{{ url_for('update_venta', id_venta=venta[0]) }}" method="POST">
+                    <div class="form-group">
+                        <label for="id_cliente_edit">Nombre Cliente</label>
+                        <select id="id_cliente_edit" name="id_cliente" class="form-control" required>
+                            <option value="" disabled>Seleccione un cliente</option>
+                            {% for cliente_item in cliente %}
+                            <option value="{{ cliente_item[0] }}" {% if cliente_item[0]==venta[4] %} selected {% endif
+                                %}>
+                                {{ cliente_item[1] }}
+                            </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Actualizar Venta</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Ventana Modal para agregar producto -->
+<div class="modal fade" id="agregarproducto{{ venta[0] }}" tabindex="-1" role="dialog"
+    aria-labelledby="agregarproducto{{ venta[0] }}Label" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="agregarproducto{{ venta[0] }}Label">Agregar Producto</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                {% if flash_messages %}
+                <div class="alert alert-{{ flash_messages[0]['category'] }} custom-alert" role="alert">
+                    {{ flash_messages[0]['message'] }}
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                {% endif %}
+                <form action="{{ url_for('agregar_venta_producto', id_venta=venta[0]) }}" method="POST">
+                    <div class="form-group">
+                        <label for="referencia">Referencia</label>
+                        <select id="referencia" name="referencia" class="form-control" required>
+                            <option value="" selected disabled>Seleccionar referencia</option>
+                            {% for prod in producto %}
+                            <option value="{{ prod[0] }}">{{ prod[1] }} - ${{ prod[4] }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="cantidad_vendida">Cantidad Producto</label>
+                        <input type="number" class="form-control" id="cantidad_vendida" name="cantidad_vendida" step="1"
+                            required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Agregar Producto</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="detalleVentaModal{{ venta[0] }}" tabindex="-1" role="dialog"
+    aria-labelledby="detalleVentaModal{{ venta[0] }}Label" aria-hidden="true">
+    <div class="modal-dialog modal-xl" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="detalleVentaModal{{ venta[0] }}Label">Detalle de Venta</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Id Venta</th>
+                            <th>Cliente</th>
+                            <th>Fecha</th>
+                            <th>Producto</th>
+                            <th>Cantidad</th>
+                            <th>Precio Unitario</th>
+                            <th>Total Producto</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for detalle in detalles_ventas %}
+                        {% if detalle[0] == venta[0] %}
+                        <tr>
+                            <td>{{ detalle[0] }}</td>
+                            <td>{{ detalle[1] }}</td>
+                            <td>{{ detalle[2] }}</td>
+                            <td>{{ detalle[3] }}</td>
+                            <td>{{ detalle[4] }}</td>
+                            <td>{{ detalle[5] }}</td>
+                            <td>{{ detalle[6] }}</td>
+                        </tr>
+                        {% endif %}
+                        {% endfor %}
+                    </tbody>
+                </table>
+                <h3>Total venta: {{venta[2]}}</h3>
+            </div>
+        </div>
+    </div>
+</div>
+{% endfor %}
+<style>
+    /* Estilos para hacer la tabla más compacta */
+    .dataTables_wrapper .dataTables_filter {
+        float: right;
+        text-align: right;
+    }
+
+    .dataTables_wrapper .dataTables_length,
+    .dataTables_wrapper .dataTables_info {
+        float: left;
+        text-align: left;
+    }
+
+    .dataTables_wrapper .dataTables_paginate {
+        float: right;
+        text-align: right;
+    }
+
+    table.dataTable {
+        width: 100% !important;
+    }
+
+    table.dataTable thead th,
+    table.dataTable tbody td {
+        padding: 4px 6px;
+        /* Ajustar el padding para hacer la tabla más compacta */
+    }
+</style>
+
+
+{% endblock %}

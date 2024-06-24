@@ -1,0 +1,349 @@
+{% extends './layout.html' %}
+
+{% block body %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card-holder">
+                <div class="card-box bg-news">
+                    <h3 class="title">Ingreso de nuevos empleados</h3>
+                    <!-- Flash Messages -->
+                    {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% if messages %}
+                    {% for category, message in messages %}
+                    <div class="alert alert-{{ category }}" role="alert">
+                        {{ message }}
+                    </div>
+                    {% endfor %}
+                    {% endif %}
+                    {% endwith %}
+                    <div class="container mt-3">
+                        <!-- Botón para mostrar el formulario -->
+                        <button id="mostrarEmpleadoFormBtn" class="btn btn-primary">Agregar Empleado</button>
+                    </div>
+                    <!-- Contenedor del formulario -->
+                    <div id="agregarEmpleadoForm" style="display: none;">
+
+                        <div class="cerrar-formulario" style="text-align: right;">
+                            <button type="button" class="close" id="cerrarEmpleadoFormBtn" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <form action="{{ url_for('add_empleado') }}" method="post">
+
+                                <div class="form-row">
+                                    <div class="form-group col-md-6">
+                                        <label for="nombres">Nombres</label>
+                                        <div class="input-group">
+                                            <input type="text" name="nombres" id="nombres" class="form-control"
+                                                placeholder="Ingrese nombres del empleado" required>
+                                            <div class="input-group-append">
+                                                <span class="input-group-text"><i class="fas fa-user"></i></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <label for="apellidos">Apellidos</label>
+                                        <div class="input-group">
+                                            <input type="text" name="apellidos" id="apellidos" class="form-control"
+                                                placeholder="Ingrese apellidos del empleado" required>
+                                            <div class="input-group-append">
+                                                <span class="input-group-text"><i class="fas fa-user"></i></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="documento">Documento</label>
+                                    <div class="input-group">
+                                        <input type="text" name="documento" id="documento" class="form-control"
+                                            placeholder="Ingrese documento del empleado" required>
+                                        <div class="input-group-append">
+                                            <span class="input-group-text"><i class="far fa-id-card"></i></span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="email">Email</label>
+                                    <div class="input-group">
+                                        <input type="email" name="email" id="email" class="form-control"
+                                            placeholder="Ingrese email del empleado" required>
+                                        <div class="input-group-append">
+                                            <span class="input-group-text"><i class="fas fa-envelope"></i></span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="telefono">Teléfono</label>
+                                    <div class="input-group">
+                                        <input type="tel" name="telefono" id="telefono" class="form-control"
+                                            placeholder="Ingrese teléfono del empleado" required>
+                                        <div class="input-group-append">
+                                            <span class="input-group-text"><i class="fas fa-phone"></i></span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="cargo">Cargo</label>
+                                    <div class="input-group">
+                                        <select name="cargo" id="cargo" class="form-control" required>
+                                            <option value="" selected disabled>Seleccione el cargo</option>
+                                            {% for cargo in cargos %}
+                                            <option value="{{ cargo[0] }}">{{ cargo[1] }}</option>
+                                            {% endfor %}
+                                        </select>
+                                        <div class="input-group-append">
+                                            <span class="input-group-text"><i class="fas fa-briefcase"></i></span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <button type="submit" class="btn btn-primary btn-block">Agregar empleado</button>
+
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="container mt-5">
+    <h2>Tabla de Empleados</h2>
+    <div class="table-responsive">
+        <table id="tablasJs" class="table table-striped table-bordered table-hover">
+            <thead class="bg-green">
+                <tr>
+                    <th scope="col">ID</th>
+                    <th scope="col">Nombres</th>
+                    <th scope="col">Apellidos</th>
+                    <th scope="col">Documento</th>
+                    <th scope="col">Email</th>
+                    <th scope="col">Teléfono</th>
+                    <th scope="col">Cargo</th>
+                    <th scope="col">Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for empleado in empleados %}
+                <tr>
+                    <th scope="row">{{ empleado[0] }}</th>
+                    <td>{{ empleado[1] }}</td>
+                    <td>{{ empleado[2] }}</td>
+                    <td>{{ empleado[3] }}</td>
+                    <td>{{ empleado[4] }}</td>
+                    <td>{{ empleado[5] }}</td>
+                    <td>{{ empleado[6] }}</td>
+                    <td>
+                        <!-- Botón para abrir la ventana modal de editar -->
+                        <button type="button" class="btn btn-sm btn-success" data-toggle="modal"
+                            data-target="#editarEmpleadoModal{{ empleado[0] }}">
+                            <i class="fas fa-pencil-alt"></i> Editar
+                        </button>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+
+{% for empleado in empleados %}
+<!-- Ventana Modal para Editar Empleado -->
+<div class="modal fade" id="editarEmpleadoModal{{ empleado[0] }}" tabindex="-1" role="dialog"
+    aria-labelledby="editarEmpleadoModal{{ empleado[0] }}Label" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editarEmpleadoModal{{ empleado[0] }}Label">Editar Empleado</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form action="{{ url_for('update_empleado', id_empleado=empleado[0]) }}" method="POST">
+                    <div class="form-group">
+                        <label for="nombres">Nombres</label>
+                        <input type="text" class="form-control" id="nombres" name="nombres" value="{{ empleado[1] }}"
+                            required>
+                    </div>
+                    <div class="form-group">
+                        <label for="apellidos">Apellidos</label>
+                        <input type="text" class="form-control" id="apellidos" name="apellidos"
+                            value="{{ empleado[2] }}" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="documento">Documento</label>
+                        <input type="text" class="form-control" id="documento" name="documento"
+                            value="{{ empleado[3] }}" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" class="form-control" id="email" name="email" value="{{ empleado[4] }}"
+                            required>
+                    </div>
+                    <div class="form-group">
+                        <label for="telefono">Teléfono</label>
+                        <input type="text" class="form-control" id="telefono" name="telefono" value="{{ empleado[5] }}"
+                            required>
+                    </div>
+                    <div class="form-group">
+                        <label for="cargo">Cargo</label>
+                        <select name="cargo" id="cargo" class="form-control" required>
+                            {% for cargo in cargos %}
+                            <option value="{{ cargo[0] }}" {% if cargo[0]==empleado[7] %}selected{% endif %}>{{ cargo[1]
+                                }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Actualizar Empleado</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endfor %}
+</div>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const formAgregarEmpleado = document.getElementById('formAgregarEmpleado');
+        const regexNombreApellido = /^[a-zA-Z\s]+$/;
+        const regexEmail = /^[a-zA-Z0-9._%+-]+@(gmail|hotmail|outlook)\.com$/;
+        const regexTelefono = /^\d{7,10}$/;
+        const regexDocumento = /^\d{7,10}$/;
+
+        formAgregarEmpleado.addEventListener('submit', function (event) {
+            let valid = true;
+
+            const nombres = document.getElementById('nombres');
+            const apellidos = document.getElementById('apellidos');
+            const email = document.getElementById('email');
+            const telefono = document.getElementById('telefono');
+            const documento = document.getElementById('documento');
+
+            const nombresError = document.getElementById('nombresError');
+            const apellidosError = document.getElementById('apellidosError');
+            const emailError = document.getElementById('emailError');
+            const telefonoError = document.getElementById('telefonoError');
+            const documentoError = document.getElementById('documentoError');
+
+            if (!regexNombreApellido.test(nombres.value)) {
+                nombresError.textContent = 'El nombre solo puede contener letras y espacios.';
+                valid = false;
+            } else {
+                nombresError.textContent = '';
+            }
+
+            if (!regexNombreApellido.test(apellidos.value)) {
+                apellidosError.textContent = 'El apellido solo puede contener letras y espacios.';
+                valid = false;
+            } else {
+                apellidosError.textContent = '';
+            }
+
+            if (!regexEmail.test(email.value)) {
+                emailError.textContent = 'El correo debe ser de dominio gmail.com, hotmail.com o outlook.com.';
+                valid = false;
+            } else {
+                emailError.textContent = '';
+            }
+
+            if (!regexTelefono.test(telefono.value)) {
+                telefonoError.textContent = 'El teléfono debe contener entre 7 y 10 números.';
+                valid = false;
+            } else {
+                telefonoError.textContent = '';
+            }
+
+            if (!regexDocumento.test(documento.value)) {
+                documentoError.textContent = 'El documento debe contener entre 7 y 10 números.';
+                valid = false;
+            } else {
+                documentoError.textContent = '';
+            }
+
+            if (!valid) {
+                event.preventDefault();
+            }
+        });
+
+        // Validaciones para formularios de edición
+        {% for empleado in empleados %}
+        const formEditarEmpleado{{ empleado[0] }} = document.getElementById('formEditarEmpleado{{ empleado[0] }}');
+        const regexNombreApellido{{ empleado[0] }} = /^[a-zA-Z\s]+$/;
+        const regexEmail{{ empleado[0] }} = /^[a-zA-Z0-9._%+-]+@(gmail|hotmail|outlook)\.com$/;
+        const regexTelefono{{ empleado[0] }} = /^\d{7,10}$/;
+        const regexDocumento{{ empleado[0] }} = /^\d{7,10}$/;
+
+        formEditarEmpleado{{ empleado[0] }}.addEventListener('submit', function (event) {
+            let valid = true;
+
+            const nombres{{ empleado[0] }} = document.getElementById('nombres{{ empleado[0] }}');
+            const apellidos{{ empleado[0] }} = document.getElementById('apellidos{{ empleado[0] }}');
+            const email{{ empleado[0] }} = document.getElementById('email{{ empleado[0] }}');
+            const telefono{{ empleado[0] }} = document.getElementById('telefono{{ empleado[0] }}');
+            const documento{{ empleado[0] }} = document.getElementById('documento{{ empleado[0] }}');
+
+            const nombresError{{ empleado[0] }} = document.getElementById('nombresError{{ empleado[0] }}');
+            const apellidosError{{ empleado[0] }} = document.getElementById('apellidosError{{ empleado[0] }}');
+            const emailError{{ empleado[0] }} = document.getElementById('emailError{{ empleado[0] }}');
+            const telefonoError{{ empleado[0] }} = document.getElementById('telefonoError{{ empleado[0] }}');
+            const documentoError{{ empleado[0] }} = document.getElementById('documentoError{{ empleado[0] }}');
+
+            if (!regexNombreApellido{{ empleado[0] }}.test(nombres{{ empleado[0] }}.value)) {
+                nombresError{{ empleado[0] }}.textContent = 'El nombre solo puede contener letras y espacios.';
+                valid = false;
+            } else {
+                nombresError{{ empleado[0] }}.textContent = '';
+            }
+
+            if (!regexNombreApellido{{ empleado[0] }}.test(apellidos{{ empleado[0] }}.value)) {
+                apellidosError{{ empleado[0] }}.textContent = 'El apellido solo puede contener letras y espacios.';
+                valid = false;
+            } else {
+                apellidosError{{ empleado[0] }}.textContent = '';
+            }
+
+            if (!regexEmail{{ empleado[0] }}.test(email{{ empleado[0] }}.value)) {
+                emailError{{ empleado[0] }}.textContent = 'El correo debe ser de dominio gmail.com, hotmail.com o outlook.com.';
+                valid = false;
+            } else {
+                emailError{{ empleado[0] }}.textContent = '';
+            }
+
+            if (!regexTelefono{{ empleado[0] }}.test(telefono{{ empleado[0] }}.value)) {
+                telefonoError{{ empleado[0] }}.textContent = 'El teléfono debe contener entre 7 y 10 números.';
+                valid = false;
+            } else {
+                telefonoError{{ empleado[0] }}.textContent = '';
+            }
+
+            if (!regexDocumento{{ empleado[0] }}.test(documento{{ empleado[0] }}.value)) {
+                documentoError{{ empleado[0] }}.textContent = 'El documento debe contener entre 7 y 10 números.';
+                valid = false;
+            } else {
+                documentoError{{ empleado[0] }}.textContent = '';
+            }
+
+            if (!valid) {
+                event.preventDefault();
+            }
+        });
+        {% endfor %}
+
+        // Mostrar/ocultar formulario de agregar empleado
+        const mostrarEmpleadoFormBtn = document.getElementById('mostrarEmpleadoFormBtn');
+        const agregarEmpleadoForm = document.getElementById('agregarEmpleadoForm');
+        const cerrarEmpleadoFormBtn = document.getElementById('cerrarEmpleadoFormBtn');
+
+        mostrarEmpleadoFormBtn.addEventListener('click', function () {
+            agregarEmpleadoForm.style.display = 'block';
+        });
+
+        cerrarEmpleadoFormBtn.addEventListener('click', function () {
+            agregarEmpleadoForm.style.display = 'none';
+        });
+    });
+</script>
+{% endblock %}

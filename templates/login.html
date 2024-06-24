@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Page</title>
+    <link href="{{ url_for('static', filename='css/styles1.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/validaciones.css') }}" rel="stylesheet">
+    <style>
+        .loading-overlay {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            background: rgba(255, 255, 255, 0.7);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+        
+        .loading-overlay .spinner {
+            border: 16px solid #f3f3f3;
+            border-radius: 50%;
+            border-top: 16px solid #3498db;
+            width: 120px;
+            height: 120px;
+            animation: spin 2s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .alert.success {
+            background-color: #4CAF50;
+        } /* Green */
+        
+        .alert.danger {
+            background-color: #f44336;
+        } /* Red */
+        
+        .closebtn {
+            margin-left: 15px;
+            color: white;
+            font-weight: bold;
+            float: right;
+            font-size: 22px;
+            line-height: 20px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        
+        .closebtn:hover {
+            color: black;
+        }
+        
+        .contenedor__login-register {
+            position: relative;
+            width: 300px;
+            height: 40px;
+            margin-bottom: 34px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 0 15px;
+            background-color: #EEEEEE;
+        }
+        
+        .contenedor__login-register.invalid {
+            border-color: red;
+            background: url('cross.png') no-repeat right;
+            background-size: 20px;
+        }
+        
+        .contenedor__login-register.valid {
+            border-color: green;
+            background: url('check.png') no-repeat right;
+            background-size: 20px;
+        }
+        
+        .contenedor__login-register ion-icon {
+            position: absolute;
+            left: -30px; /* Ajusta la posición del ícono hacia la izquierda fuera del contenedor */
+        }
+        
+        .contenedor__login-register input {
+            position: absolute;
+            left: 1px;
+            height: 97%;
+            width: calc(115% - 45px);
+            z-index: 1;
+            padding-left: 12px;
+        }
+        
+        .error-message {
+            color: red;
+            font-size: 10px;
+            margin-top: 4px;
+            position: absolute;
+            bottom: -24px;
+            left: 15px;
+        }
+        
+        body {
+            background: url('{{ url_for('static', filename='img/bg3.jpg') }}') no-repeat center center fixed; 
+            background-size: cover;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.8); /* Fondo blanco semitransparente para el contenido */
+            padding: 0px;
+            border-radius: 10px;
+        }
+        
+    </style>
+</head>
+<body>
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="spinner"></div>
+    </div>
+    <div class="container">
+        <!-- Formulario de Iniciar Sesión -->
+        <div class="container-form">
+            <form class="sign-in" id="loginForm" method="POST" action="{{ url_for('login') }}" onsubmit="return validateLoginForm()">
+                <h2>Iniciar Sesión</h2>
+                <div class="social-networks">
+                    <a href="https://wa.me/3001457680" target="_blank">
+                        <ion-icon name="logo-whatsapp"></ion-icon>
+                    </a>
+                    <a href="https://web.facebook.com/profile.php?id=100092427816135" target="_blank">
+                        <ion-icon name="logo-facebook"></ion-icon>
+                    </a>
+                    <a href="https://instagram.com/nowtifylogist?igshid=YmMyMTA2M2Y=" target="_blank">
+                        <ion-icon name="logo-instagram"></ion-icon>
+                    </a>
+                    <a href="https://twitter.com/NowtifyLogist" target="_blank">
+                        <ion-icon name="logo-twitter"></ion-icon>
+                    </a>
+                </div>
+                <span>Use su correo y contraseña</span>
+                <div class="contenedor__login-register">
+                    <ion-icon name="mail-outline"></ion-icon>
+                    <input type="email" placeholder="Email" name="correo" id="loginCorreo" required>
+                    <div class="error-message" id="errorCorreo"></div>
+                </div>
+                
+                <div class="contenedor__login-register">
+                    <ion-icon name="lock-closed-outline"></ion-icon>
+                    <input type="password" placeholder="Password" id="loginContraseña" name="contraseña" required>
+                    <div class="error-message" id="errorCorreo"></div>
+                </div>
+                <a href="/web/recuperar" id="forgotPasswordLink">¿Olvidaste tu contraseña?</a>
+                <button class="button" type="submit">INICIAR SESIÓN</button>
+            </form>
+        </div>
+        
+        <!-- Formulario de Registro -->
+        <div class="container-form">
+            <form class="sign-up" id="registerForm" method="POST" action="{{ url_for('register') }}" onsubmit="return validateRegisterForm()">
+                <h2>Registrarse</h2>
+                <div class="social-networks">
+                    <a href="https://wa.me/3001457680" target="_blank">
+                        <ion-icon name="logo-whatsapp"></ion-icon>
+                    </a>
+                    <a href="https://web.facebook.com/profile.php?id=100092427816135" target="_blank">
+                        <ion-icon name="logo-facebook"></ion-icon>
+                    </a>
+                    <a href="https://instagram.com/nowtifylogist?igshid=YmMyMTA2M2Y=" target="_blank">
+                        <ion-icon name="logo-instagram"></ion-icon>
+                    </a>
+                    <a href="https://twitter.com/NowtifyLogist" target="_blank">
+                        <ion-icon name="logo-twitter"></ion-icon>
+                    </a>
+                </div>
+                <span>Use su correo electrónico para registrarse</span>
+                <div class="contenedor__login-register">
+                    <ion-icon name="person-outline"></ion-icon>
+                    <input type="text" placeholder="Nombre de usuario" name="nombre_usuario" id="registerUsuario" required>
+                    <div class="error-message" id="errorCorreo"></div>
+                </div>
+                <div class="contenedor__login-register">
+                    <ion-icon name="mail-outline"></ion-icon>
+                    <input type="email" placeholder="Email" name="correo" id="registerCorreo" required>
+                    <div class="error-message" id="errorCorreo"></div>
+                </div>
+                <div class="contenedor__login-register">
+                    <ion-icon name="lock-closed-outline"></ion-icon>
+                    <input type="password" placeholder="Password" name="contraseña" id="registerContraseña" required>
+                    <div class="error-message" id="errorCorreo"></div>
+                </div>
+                <button class="button" type="submit">REGISTRARSE</button>
+            </form>
+        </div>
+
+        <!-- Bienvenido -->
+        <div class="container-welcome">
+            <div class="welcome-sign-up welcome">
+                <h3>¡Bienvenido!</h3>
+                <p>Ingrese sus datos personales para usar todas las funciones del sitio</p>
+                <button class="button" id="btn-sign-up">Registrarse</button>
+            </div>
+            <div class="welcome-sign-in welcome">
+                <h3>¡Hola!</h3>
+                <p>Regístrese con sus datos personales para usar todas las funciones del sitio</p>
+                <button class="button" id="btn-sign-in">Iniciar Sesión</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para el mensaje flash -->
+    <div id="flashModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <div id="flashMessage"></div>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/validaciones.js') }}"></script>
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', (event) => {
+            const flashModal = document.getElementById("flashModal");
+            const resetPasswordModal = document.getElementById("resetPasswordModal");
+            const newPasswordModal = document.getElementById("newPasswordModal");
+            const span = document.getElementsByClassName("close");
+
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    let flashMessage = '';
+                    {% for category, message in messages %}
+                        flashMessage += `<div class="alert alert-{{ category }}">{{ message }}</div>`;
+                    {% endfor %}
+                    document.getElementById('flashMessage').innerHTML = flashMessage;
+                    flashModal.style.display = "block";
+                {% endif %}
+            {% endwith %}
+
+            for (let i = 0; i < span.length; i++) {
+                span[i].onclick = function() {
+                    flashModal.style.display = "none";
+                    resetPasswordModal.style.display = "none";
+                    newPasswordModal.style.display = "none";
+                }
+            }
+
+            window.onclick = function(event) {
+                if (event.target == flashModal) {
+                    flashModal.style.display = "none";
+                } else if (event.target == resetPasswordModal) {
+                    resetPasswordModal.style.display = "none";
+                } else if (event.target == newPasswordModal) {
+                    newPasswordModal.style.display = "none";
+                }
+            }
+
+            document.getElementById("forgotPasswordLink").onclick = function() {
+                resetPasswordModal.style.display = "block";
+            }
+
+            {% if show_reset_password_modal %}
+                newPasswordModal.style.display = "block";
+            {% endif %}
+        });
+
+
+        function showLoading() {
+            const loadingOverlay = document.getElementById("loadingOverlay");
+            loadingOverlay.style.display = "flex"; // Mostrar pantalla de carga
+            setTimeout(function() {
+                loadingOverlay.style.display = "none";
+            }, 1000000); // Duración en milisegundos (en este caso, 3 segundos)
+        }
+    </script>
+</body>
+</html>

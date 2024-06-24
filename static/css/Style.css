@@ -1,0 +1,257 @@
+
+
+.card-holder {
+    margin: 2em 0;
+}
+
+.card-box {
+    font-family: "Roboto", sans-serif;
+    font-size: 14px;
+    font-weight: 800;
+    padding: 1em;
+    border-radius: 0.25em;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+}
+
+
+.bg-news {
+    background: -webkit-linear-gradient(70deg, #3AB397 40%, #dbe0de 40%);
+    background: -o-linear-gradient(70deg, #3AB397 40%, #d2d7d5 40%);
+    background: -moz-linear-gradient(70deg, #3AB397 40%, #d2d7d5 40%);
+    background: linear-gradient(70deg, #3AB397 40%, #d2d7d5 40%);
+}
+
+.bg-green,
+.btn-success {
+    background-color: #3AB397;
+    color: white;
+    /* Cambia el color del texto si es necesario para asegurar la legibilidad */
+}
+
+.btn-primary {
+    background-image: -webkit-linear-gradient(315deg, #2a9f84 0%, #3AB397 100%);
+    background-image: -moz-linear-gradient(315deg, #2a9f84 0%, #3AB397 100%);
+    background-image: -o-linear-gradient(315deg, #2a9f84 0%, #3AB397 100%);
+    background-image: linear-gradient(135deg, #2a9f84 0%, #3AB397 100%);
+    border: 1px solid #ffffff;
+    /* Agrega un borde blanco */
+    -webkit-filter: hue-rotate(0deg);
+    filter: hue-rotate(0deg);
+    border-radius: 0.25em;
+    /* Opcional: para redondear un poco los bordes */
+    padding: 10px 20px;
+    /* Ajusta el padding según sea necesario */
+    font-weight: bold;
+    /* Puedes ajustar el peso de la fuente si es necesario */
+
+}
+
+.btn-primary:hover {
+    cursor: pointer;
+    /* Cambia el cursor al pasar sobre el botón */
+}
+
+.title {
+    font-family: "Roboto", sans-serif;
+    font-size: 1.5em;
+    /* Aumentamos el tamaño de la fuente a 1.5em */
+    color: #060606;
+    /* Color de texto más oscuro */
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    margin-bottom: 1em;
+    /* Aumentamos el espacio inferior a 1em */
+    font-weight: 600;
+    padding-bottom: 10px;
+    /* Aumentamos el padding inferior a 10px */
+}
+
+
+.card-details {
+    padding: 25px 25px 15px;
+}
+
+.inner-addon {
+    position: relative;
+}
+
+.inner-addon .fas,
+.inner-addon .far {
+    position: absolute;
+    padding: 10px;
+    pointer-events: none;
+    color: #bcbdbd !important;
+}
+
+.right-addon .fas,
+.right-addon .far {
+    right: 0px;
+    top: 40px;
+}
+
+.right-addon input {
+    padding-right: 30px;
+}
+
+
+
+.form-group {
+    margin-bottom: 1.5em;
+}
+
+.form-check-label {
+    margin-left: 1.25em;
+}
+
+.table-hover tbody tr:hover {
+    background-color: #a6b7af;
+}
+
+.table th,
+.table td {
+    vertical-align: middle;
+}
+
+.container.mt-5 {
+    background-color: #eae6e6;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.container.mt-5,
+.container-fluid.mt-5 {
+    background-color: #eae6e6;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin-bottom: 5%;
+}
+
+.container.mt-5 h2,
+.container-fluid.mt-5 h2 {
+    font-family: 'Arial', sans-serif;
+    font-size: 1.8rem; /* Aumentado ligeramente el tamaño de la fuente */
+    font-weight: bold;
+    margin-bottom: 20px;
+    color: #333;
+    border-bottom: 2px solid #3AB397; /* Línea inferior de color verde */
+    padding-bottom: 10px; /* Espacio inferior */
+}
+
+.table-responsive {
+    overflow-x: auto;
+    margin-top: 20px;
+}
+
+.table-responsive::-webkit-scrollbar {
+    height: 8px;
+}
+
+.table-responsive::-webkit-scrollbar-thumb {
+    background-color: #888;
+    border-radius: 4px;
+}
+
+.table-responsive::-webkit-scrollbar-thumb:hover {
+    background-color: #555;
+}
+
+/* Estilos para el modal fade */
+.modal-content {
+    font-family: "Roboto", sans-serif;
+    border-radius: 0.25em;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+}
+
+.modal-header {
+    background-color: #3AB397;
+    color: white;
+    border-bottom: none;
+    /* Elimina el borde inferior del header */
+    padding: 1em;
+}
+
+.modal-title {
+    font-weight: 800;
+}
+
+.modal-body {
+    padding: 1em;
+    background: -webkit-linear-gradient(70deg, #3AB397 40%, #dbe0de 40%);
+    background: -o-linear-gradient(70deg, #3AB397 40%, #d2d7d5 40%);
+    background: -moz-linear-gradient(70deg, #3AB397 40%, #d2d7d5 40%);
+    background: linear-gradient(70deg, #3AB397 40%, #d2d7d5 40%);
+}
+
+.modal-footer {
+    border-top: none;
+    /* Elimina el borde superior del footer */
+    padding: 1em;
+}
+
+.close {
+    color: white;
+    /* Color del icono de cerrar */
+}
+
+.close:hover {
+    color: #f8f9fa;
+    /* Color del icono de cerrar al pasar el mouse */
+}
+.footer .copy{
+    background-color: white;
+    padding: 15px 10px;
+    text-align: center;
+    color: black;
+    width: 100%;
+    bottom: 0;
+    position: flex;
+}
+
+/* Estilos para la tabla dentro del modal */
+.modal-content table {
+    width: 100%;
+    margin-bottom: 0; /* Elimina el margen inferior para ajustar mejor en el modal */
+    border: 2px solid #000; /* Agrega un borde negro a la tabla */
+    border-collapse: collapse; /* Colapsa los bordes de las celdas */
+}
+
+.modal-content th,
+.modal-content td {
+    vertical-align: middle; /* Alineación vertical centrada para celdas */
+    padding: 0.75rem; /* Ajusta el padding interno de las celdas */
+    border: 1px solid #000; /* Agrega un borde negro a las celdas */
+}
+
+.modal-content th {
+    background-color: #3AB397; /* Fondo del encabezado de columna */
+    color: white; /* Color del texto en el encabezado de columna */
+}
+
+.modal-content tbody tr:nth-child(even) td {
+    background-color: #d3e0dc; /* Color de fondo para las celdas de filas pares */
+}
+
+.modal-content tbody tr:nth-child(odd) td {
+    background-color: #ffffff; /* Color de fondo para las celdas de filas impares */
+}
+
+.modal-content .btn-group .btn {
+    margin-right: 5px; /* Espacio entre los botones de acción */
+}
+
+.modal-content .modal-footer button {
+    color: white; /* Color del texto de los botones */
+}
+
+.modal-content .modal-footer button:hover {
+    opacity: 0.8; /* Opacidad reducida al pasar el mouse */
+}
+.modal-body h3 {
+    font-family: "Roboto", sans-serif; /* Fuente */
+    font-size: 24px; /* Tamaño de fuente */
+    font-weight: 800;
+    color: #f8f8f8; /* Color del texto */
+    margin-top: 20px; /* Margen superior */
+    
+}

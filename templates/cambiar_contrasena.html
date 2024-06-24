@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cambiar Contraseña</title>
+    <link href="{{ url_for('static', filename='css/validaciones.css') }}" rel="stylesheet">
+    <style>
+        body {
+            background: url('{{ url_for('static', filename='img/bg3.jpg') }}') no-repeat center center fixed; 
+            background-size: cover;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        form {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin-top: 50px; /* Espacio desde la parte superior */
+            max-width: 400px;
+            width: 100%;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        input[type="password"],
+        input[type="submit"] {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+            font-size: 16px; /* Tamaño de fuente más grande para una mejor legibilidad */
+        }
+
+        input[type="submit"] {
+            background-color: #3AB397;
+            color: #fff;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #3AB400;
+        }
+
+        .error {
+            color: red;
+            font-size: 0.9em;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+    <form action="/web/cambiar_contrasena/{{ token }}" method="post" id="cambiarContrasenaForm">
+        <h2>Cambiar Contraseña</h2>
+        <label for="nueva_contrasena">Nueva Contraseña:</label>
+        <input type="password" placeholder="Password" id="nueva_contrasena" name="nueva_contrasena" required>
+        <div class="error" id="errorNuevaContrasena"></div>
+        <input type="submit" value="Cambiar Contraseña">
+        
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <ul class="messages">
+                    {% for message in messages %}
+                        <li>{{ message }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        {% endwith %}
+    </form>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const cambiarContrasenaForm = document.getElementById('cambiarContrasenaForm');
+            const nuevaContrasenaInput = document.getElementById('nueva_contrasena');
+            const nuevaContrasenaError = document.getElementById('errorNuevaContrasena');
+
+            const passwordRegex = /^(?=.*[A-Z])[A-Za-z\d@$!%*?&]{8,12}$/;
+
+            function validatePassword() {
+                if (passwordRegex.test(nuevaContrasenaInput.value)) {
+                    nuevaContrasenaInput.classList.add('is-valid');
+                    nuevaContrasenaInput.classList.remove('is-invalid');
+                    nuevaContrasenaError.innerHTML = '';
+                    return true;
+                } else {
+                    nuevaContrasenaInput.classList.add('is-invalid');
+                    nuevaContrasenaInput.classList.remove('is-valid');
+                    nuevaContrasenaError.innerHTML = 'La contraseña debe tener entre 8 y 12 caracteres y al menos una letra mayúscula.';
+                    return false;
+                }
+            }
+
+            nuevaContrasenaInput.addEventListener('input', validatePassword);
+
+            cambiarContrasenaForm.addEventListener('submit', function (e) {
+                if (!validatePassword()) {
+                    e.preventDefault();
+                    alert('Por favor, introduce una contraseña válida.');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

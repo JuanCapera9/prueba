@@ -1,0 +1,227 @@
+{% extends './layout.html' %}
+
+{% block body %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card-holder">
+                <div class="card-box bg-news">
+                    <h3 class="title">Ingreso de nuevos inventarios</h3>
+                    {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% if messages %}
+                    {% for category, message in messages %}
+                    <div class="alert alert-{{ category }}" role="alert">
+                        {{ message }}
+                    </div>
+                    {% endfor %}
+                    {% endif %}
+                    {% endwith %}
+                    <div class="container mt-3">
+                        <button id="mostrarInventarioFormBtn" class="btn btn-primary">Agregar Inventario</button>
+                    </div>
+                    <div id="agregarInventarioForm" style="display: none;">
+                        <div class="cerrar-formulario" style="text-align: right;">
+                            <button type="button" class="close" id="cerrarInventarioFormBtn" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <form action="{{ url_for('add_inventario') }}" method="post">
+                            <div class="form-group">
+                                <label for="nombre">Nombre del Inventario</label>
+                                <input type="text" name="nombre" id="nombre" class="form-control" placeholder="Ingrese nombre del inventario" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="notas">Notas</label>
+                                <textarea name="notas" id="notas" class="form-control" rows="4" placeholder="Ingrese notas del inventario"></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-primary btn-block">Agregar Inventario</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container-fluid mt-5">
+    <h2>Tabla de Inventario</h2>
+    <div class="table-responsive">
+        <table id="tablasJs" class="table table-striped table-bordered table-hover">
+            <thead class="bg-green">
+                <tr>
+                    <th scope="col">ID</th>
+                    <th scope="col">Nombre del inventario</th>
+                    <th scope="col">Fecha de Creación</th>
+                    <th scope="col">Notas</th>
+                    <th scope="col">Acciones</th>
+                    <th scope="col">Productos</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for inventario in inventarios %}
+                <tr>
+                    <th scope="row">{{ inventario[0] }}</th>
+                    <td>{{ inventario[1] }}</td>
+                    <td>{{ inventario[2].strftime('%Y-%m-%dT%H:%M') }}</td>
+                    <td><div class="text-wrap">{{ inventario[3] }}</div></td>
+                    <td>
+                        <button type="button" class="btn btn-sm btn-success" data-toggle="modal" data-target="#editarInventarioModal{{ inventario[0] }}">
+                            <i class="fas fa-pencil-alt"></i> Editar
+                        </button>
+                    </td>
+                    <td>
+                        <div class="btn-group" role="group" aria-label="Product actions">
+                            <button type="button" class="btn btn-sm btn-warning" data-toggle="modal" data-target="#agregarInventarioProductoModal{{ inventario[0] }}">
+                                <i class="fas fa-plus"></i> Añadir
+                            </button>
+                            <button type="button" class="btn btn-sm btn-info" data-toggle="modal" data-target="#buscarProductoModal{{ inventario[0] }}">
+                                <i class="fas fa-search"></i> Buscar
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+{% for inventario in inventarios %}
+<!-- Ventana Modal para Editar Inventario -->
+<div class="modal fade" id="editarInventarioModal{{ inventario[0] }}" tabindex="-1" role="dialog" aria-labelledby="editarInventarioModal{{ inventario[0] }}Label" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editarInventarioModal{{ inventario[0] }}Label">Editar Inventario</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form action="{{ url_for('update_inventario', id_inventario=inventario[0]) }}" method="POST">
+                    <div class="form-group">
+                        <label for="nombre">Nombre del Inventario</label>
+                        <input type="text" class="form-control" id="nombre" name="nombre" value="{{ inventario[1] }}" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="notas">Notas</label>
+                        <textarea class="form-control" id="notas" name="notas" rows="4" required>{{ inventario[3] }}</textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Actualizar Inventario</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Ventana Modal para agregar producto -->
+<div class="modal fade" id="agregarInventarioProductoModal{{ inventario[0] }}" tabindex="-1" role="dialog" aria-labelledby="agregarInventarioProductoModal{{ inventario[0] }}Label" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="agregarInventarioProductoModal{{ inventario[0] }}Label">Agregar Producto</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                {% if flash_messages %}
+                <div class="alert alert-{{ flash_messages[0]['category'] }} custom-alert" role="alert">
+                    {{ flash_messages[0]['message'] }}
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                {% endif %}
+                <form action="{{ url_for('agregar_producto_inventario', id_inventario=inventario[0]) }}" method="POST">
+                    <div class="form-group">
+                        <label for="referencia">Referencia</label>
+                        <select id="referencia" name="referencia" class="form-control" required>
+                            <option value="" selected disabled>Seleccionar referencia</option>
+                            {% for prod in producto %}
+                            <option value="{{ prod[0] }}">{{ prod[1] }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Agregar Producto</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Ventana Modal para buscar producto -->
+<div class="modal fade" id="buscarProductoModal{{ inventario[0] }}" tabindex="-1" role="dialog" aria-labelledby="buscarProductoModal{{ inventario[0] }}Label" aria-hidden="true">
+    <div class="modal-dialog modal-xl" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="buscarProductoModal{{ inventario[0] }}Label">Productos en inventario</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Id Inventario</th>
+                            <th>Nombre Inventario</th>
+                            <th>Nombre Producto</th>
+                            <th>Cantidad Producto</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for inventario_producto in inventario_producto %}
+                        {% if inventario_producto[0] == inventario[0] %}
+                        <tr>
+                            <td>{{ inventario_producto[0] }}</td>
+                            <td>{{ inventario_producto[1] }}</td>
+                            <td>{{ inventario_producto[2] }}</td>
+                            <td>{{ inventario_producto[3] }}</td>
+                        </tr>
+                        {% endif %}
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endfor %}
+
+<style>
+    .dataTables_wrapper .dataTables_filter {
+        float: right;
+        text-align: right;
+    }
+
+    .dataTables_wrapper .dataTables_length,
+    .dataTables_wrapper .dataTables_info {
+        float: left;
+        text-align: left;
+    }
+
+    .dataTables_wrapper .dataTables_paginate {
+        float: right;
+        text-align: right;
+    }
+
+    table.dataTable {
+        width: 100% !important;
+    }
+
+    table.dataTable thead th,
+    table.dataTable tbody td {
+        padding: 4px 6px;
+    }
+
+    .text-wrap {
+        white-space: normal !important;
+        word-wrap: break-word;
+        word-break: break-word;
+    }
+</style>
+
+{% endblock %}

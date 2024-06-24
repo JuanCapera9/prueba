@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recuperar Contraseña</title>
+    <link href="{{ url_for('static', filename='css/validaciones.css') }}" rel="stylesheet">
+    <style>
+        body {
+            background: url('{{ url_for('static', filename='img/bg3.jpg') }}') no-repeat center center fixed; 
+            background-size: cover;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .flash-messages-container {
+            position: absolute;
+            top: 20px;
+            left: 500px;
+            right: 500px;
+            text-align: center;
+            z-index: 1000; /* Asegura que los mensajes de flash estén sobre el formulario */
+        }
+
+        form {
+            background-color: #fff;
+            padding: 30px; /* Aumenta el espacio interior del formulario */
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 400px; /* Ancho del formulario */
+            max-width: 90%;
+            margin: auto; /* Centra el formulario horizontalmente */
+            margin-top: 50px; /* Espacio desde la parte superior */
+        }
+
+        label {
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        input[type="email"],
+        input[type="password"],
+        input[type="submit"] {
+            width: 100%;
+            padding: 12px; /* Aumenta el espacio interior del campo de entrada */
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+            font-size: 16px; /* Tamaño de fuente más grande para una mejor legibilidad */
+        }
+
+        input[type="submit"] {
+            background-color: #3AB397;
+            color: #fff;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            border: none;
+            padding: 15px 20px;
+            font-size: 18px;
+            border-radius: 4px;
+            text-transform: uppercase;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #3AB400;
+        }
+
+        .btn-secondary {
+            display: inline-block;
+            padding: 12px 24px; /* Aumenta el espacio interior del botón */
+            margin-top: 10px;
+            background-color: #6c757d;
+            color: #fff;
+            text-align: center;
+            text-decoration: none;
+            border-radius: 4px;
+            transition: background-color 0.3s ease;
+            font-size: 16px;
+        }
+
+        .btn-secondary:hover {
+            background-color: #5a6268;
+        }
+
+        .flash-message {
+            margin-bottom: 10px;
+            padding: 12px; /* Aumenta el espacio interior del mensaje de flash */
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        .flash-error {
+            background-color: #f44336;
+            color: white;
+        }
+
+        .flash-success {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .error-message {
+            color: #f44336;
+            font-size: 14px;
+            margin-top: 5px;
+        }
+
+        .is-invalid {
+            border-color: #f44336 !important;
+        }
+
+        .is-valid {
+            border-color: #4CAF50 !important;
+        }
+    </style>
+</head>
+<body>
+    <div class="flash-messages-container">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="flash-message flash-{{ category }}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+    </div>
+    <div class="container">
+        <form id="recoverForm" action="/web/recuperar" method="post">
+            <h2>Recuperar Contraseña</h2>
+            <div class="form-group">
+                <label for="correo">Correo Electrónico:</label>
+                <input type="email" class="form-control" placeholder="Email" name="correo" id="loginCorreo" required>
+                <div class="error-message" id="errorCorreo"></div>
+            </div>
+        <input type="submit" value="Recuperar Contraseña">
+        <a href="{{ url_for('login') }}" class="btn btn-secondary">Volver</a>
+    </form>
+    <script src="{{ url_for('static', filename='js/validaciones.js') }}"></script>
+</body>
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const recoverForm = document.getElementById('recoverForm');
+        const loginCorreo = document.getElementById('loginCorreo');
+        const emailRegex = /^[a-zA-Z0-9._%+-]+@(gmail\.com|outlook\.com|hotmail\.com)$/;
+
+        function validateInput(input, regex, message) {
+            if (regex.test(input.value)) {
+                input.classList.add('is-valid');
+                input.classList.remove('is-invalid');
+                document.getElementById(`error${input.id.charAt(0).toUpperCase() + input.id.slice(1)}`).innerHTML = ''; // Limpiar mensaje de error
+            } else {
+                input.classList.add('is-invalid');
+                input.classList.remove('is-valid');
+                document.getElementById(`error${input.id.charAt(0).toUpperCase() + input.id.slice(1)}`).innerHTML = message;
+            }
+        }
+
+        loginCorreo.addEventListener('input', function () {
+            validateInput(loginCorreo, emailRegex, 'Por favor, introduce un correo electrónico válido.');
+        });
+
+        recoverForm.addEventListener('submit', function (e) {
+            if (!emailRegex.test(loginCorreo.value)) {
+                e.preventDefault();
+                alert('Por favor, introduce un correo electrónico válido.');
+            }
+        });
+    });
+</script>
+</html>
